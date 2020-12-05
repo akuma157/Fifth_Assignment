@@ -1,8 +1,3 @@
-/*
- My Name: Ahmed Khalid Abdelrahman Hassan
- Class: Second Year
- Department: Computer Engineering
- */
 #include<bits/stdc++.h>
 #include<string>
 using namespace std;
@@ -12,6 +7,27 @@ class Node{ // A linked list node
 		int data;
 		Node *next;
 };
+void showstack(stack <int> s) // the function that shows the stack to the user
+{
+    while (!s.empty())
+    {
+        cout<<"["<<s.top()<<"]";
+        s.pop();
+    }
+    cout<<endl;
+}
+void deleteMid(stack<int> &s, int n, // the deletion function
+			int curr=0)
+{
+	if (s.empty() || curr == n) 
+		return; 
+	int x = s.top(); 
+	s.pop(); 
+	deleteMid(s, n, curr+1); 
+	if (curr != n/2) 
+		s.push(x); 
+}
+
 void push(Node** head_ref, int new_data) // the add at first function
 {
 	Node* new_node = new Node(); // allocate node
@@ -93,7 +109,7 @@ void printList(Node *node) // this function shows the linked list saved
 {
     while (node != NULL)
     {
-        cout<<"| "<<node->data<<" |";
+        cout<<"| "<<node->data<<" |>";
         node = node->next;
     }
     
@@ -101,46 +117,79 @@ void printList(Node *node) // this function shows the linked list saved
   
 int main()
 {
-	int i=0, a, b, c, d, s, choice, choAdd; // all the integers
-	Node* head = NULL; // making node null
-	push(&head, 1); // inserting the integer 1 into the list
-    append(&head, 5); // inserting the integer 5 into the list
-    insertAfter(head->next, 3); // inserting the integer 3 into the list
-    cout<<"The Linked list: ";
-    printList(head); // the linked list show is for editing
+	int CHOICE;
     
-	cout<<"\nEnter 1 to Add An Element\nEnter 2 to Delete An Element\n";
-	cin>>choice;
-	switch (choice){ // choosing between adding or deleting elements
-			case 1:{ // first adding elements
-				do{
-					i=i+1;
-					cout<<"\nEnter 1 to Add First\nEnter 2 to Add at Middle\nEnter 3 to Add Last\n";
-					cin>>choAdd;
-					
-					switch (choAdd){ // the adding choice is between three ways 
-						case 1:{cout<<"Enter An Element: ";cin>>a;
-							push(&head, a); // the first element addition from the push function
+    cout<<"Enter 1 for Linked List\nEnter 2 for Stack\nEnter 3 for Queue\n";
+    cin>>CHOICE;
+    switch(CHOICE){
+    	case 1:{
+    		int i=0, a, b, c, d, s, choice, choAdd; // all the integers
+			Node* head = NULL; // making node null
+			push(&head, 1); // inserting the integer 1 into the list
+		    append(&head, 5); // inserting the integer 5 into the list
+		    insertAfter(head->next, 3); // inserting the integer 3 into the list
+		    cout<<"The Linked list: ";
+		    printList(head); // the linked list show is for editing
+    
+			cout<<"\nEnter 1 to Add An Element\nEnter 2 to Delete An Element\n";
+			cin>>choice;
+			switch (choice){ // choosing between adding or deleting elements
+					case 1:{ // first adding elements
+						do{
+							i=i+1;
+							cout<<"\nEnter 1 to Add First\nEnter 2 to Add at Middle\nEnter 3 to Add Last\n";
+							cin>>choAdd;
+							
+							switch (choAdd){ // the adding choice is between three ways 
+								case 1:{cout<<"Enter An Element to Add: ";cin>>a;
+									push(&head, a); // the first element addition from the push function
+									break;}
+								case 2:{cout<<"Enter An Element to Add: ";cin>>b;
+									insertAfter(head->next, b); // the middle element addition from the insertAfter function
+									break;}
+								case 3:{cout<<"Enter An Element to Add: ";cin>>c;
+									append(&head, c); // the last element addition from the append function
+									break;}
+								default :{cout<<"";break;}
 							break;}
-						case 2:{cout<<"Enter An Element: ";cin>>b;
-							insertAfter(head->next, b); // the middle element addition from the insertAfter function
-							break;}
-						case 3:{cout<<"Enter An Element: ";cin>>c;
-							append(&head, c); // the last element addition from the append function
-							break;}
-						default :{cout<<"";break;}
-					break;}
-				cout<<"The Linked list after Addition: ";
-	    		printList(head);} // printList function is detected for showing the last list edited
-				while (i<3);}
-			case 2:{cout<<"\nEnter The Element You Want to Delete: ";cin>>d;
-				deleteNode(&head, d); // the element deletion function
-			    cout<<"\nThe Linked list after Deletion: ";
-			    printList(head);break;}
-			default :{cout<<"";break;}
+						cout<<"The Linked list after Addition: ";
+			    		printList(head);} // printList function is detected for showing the last list edited
+						while (i<3);}
+					case 2:{cout<<"\nEnter The Element You Want to Delete: ";cin>>d;
+						deleteNode(&head, d); // the element deletion function
+					    cout<<"\nThe Linked list after Deletion: ";
+					    printList(head);break;}
+					default :{cout<<"";break;}
+					}
+			cout<<"\nThe List Length is: "<<getCount(head); // getCount function counts the number of elements in the list
+			cout<<"\nEnter the Element You Want to Find: ";cin>>s;
+			search(head, s)? cout<<"The value is included" : cout<<"There's no such a value"; // the search function finds the elements you enter
+			break;}
+		case 2:{
+			int j=0, se, xs;
+			stack <int> s; // the stack is defined as an integer
+		    cout<<"Elements number you want to enter: ";cin>>se; // making the stack from the scratch
+		    cout<<"Enter Each Element:\n";
+		    do
+		    {
+		    	j++;
+		    	cin>>xs;
+		    	s.push(xs);
 			}
-	cout<<"\nThe List Length is: "<<getCount(head); // getCount function counts the number of elements in the list
-	cout<<"\nEnter the Element You Want to Find: ";cin>>s;
-	search(head, s)? cout<<"The value is included" : cout<<"There's no such a value"; // the search function finds the elements you enter
+			while (j<se);
+			cout<<"The stack is: ";
+    		showstack(s); // showing the last edited stack
+		    cout<<"The stack after deletion is: ";
+		    deleteMid(s, s.size()); // deletMid is a function deletes the middle stack element
+		    while (!s.empty())
+		    {
+		    	int p=s.top(); // the integer p contains every element didn't get deleted
+		    	s.pop();
+		    	cout<<"["<<p<<"]";
+			}
+			break;
+		}
+		default :{cout<<"";break;}
+	}
     return 0;
 }
